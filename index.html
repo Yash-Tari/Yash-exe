@@ -72,9 +72,15 @@
               status.innerText = '❌ Unexpected error occurred.';
             }
           })
-          .catch(() => {
-            status.innerText = '❌ Failed to submit. Try again.';
+          .catch(async (err) => {
+            try {
+              const errorResponse = await err.response.json();
+              status.innerText = `❌ ${errorResponse.message || "Failed to submit."}`;
+            } catch {
+              status.innerText = `❌ Network or server error.`;
+            }
           });
+
         },
         error => {
           status.innerText = '❌ Location access denied or unavailable.';
