@@ -15,14 +15,22 @@
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
 
-        // Google Form URL with location data appended
+        // Google Form URL
         var googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd3tatQNfrJVt3T_1adV8d_egWQKElUll5Tw0bPzWf98n6yVA/viewform";
         
-        // Append latitude and longitude to the Google Form URL
-        googleFormUrl += "?entry.123456=" + latitude;  // Replace "entry.123456" with the actual entry ID for latitude
-        googleFormUrl += "&entry.789101=" + longitude;  // Replace "entry.789101" with the actual entry ID for longitude
+        // Dynamically find the input fields using jsname
+        var latitudeInputField = document.querySelector("[jsname='YPqjbf']");
 
-        // Redirect to the Google Form
+        // If the input field exists, populate it with the latitude or longitude
+        if (latitudeInputField) {
+          // Assuming the first field is for Latitude
+          latitudeInputField.value = latitude;
+        }
+
+        // Construct the URL with dynamic query parameters for Latitude and Longitude
+        googleFormUrl += "?entry.123456=" + latitude + "&entry.789101=" + longitude;
+
+        // Redirect to the Google Form with the location populated
         window.location.href = googleFormUrl;
       }, function(error) {
         alert("Location access denied or unavailable.");
