@@ -3,51 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Capture Location and Redirect</title>
-  <script>
-    // Request location when the page loads
-    window.onload = function() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(redirectToForm, showError);
-      } else {
-        alert("Geolocation is not supported by this browser.");
-      }
-    };
-
-    function redirectToForm(position) {
-      var latitude = position.coords.latitude;
-      var longitude = position.coords.longitude;
-
-      // Google Form URL (replace with your own form's URL)
-      var formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd3tatQNfrJVt3T_1adV8d_egWQKElUll5Tw0bPzWf98n6yVA/viewform?usp=header";
-      
-      // Append the latitude and longitude as query parameters
-      var formWithLocation = formUrl + "?entry.XXXXXXX=" + latitude + "&entry.YYYYYYY=" + longitude;
-
-      // Redirect to the Google Form
-      window.location.href = formWithLocation;
-    }
-
-    function showError(error) {
-      switch(error.code) {
-        case error.PERMISSION_DENIED:
-          alert("You denied location access.");
-          break;
-        case error.POSITION_UNAVAILABLE:
-          alert("Location information is unavailable.");
-          break;
-        case error.TIMEOUT:
-          alert("The request to get user location timed out.");
-          break;
-        case error.UNKNOWN_ERROR:
-          alert("An unknown error occurred.");
-          break;
-      }
-    }
-  </script>
+  <title>Location Redirect</title>
 </head>
 <body>
-  <h1>Redirecting you to the form...</h1>
-  <p>Please allow location access in your browser.</p>
+
+<script>
+  // Function to get location and redirect to Google Form
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+
+        // Google Form URL with location data appended
+        var googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd3tatQNfrJVt3T_1adV8d_egWQKElUll5Tw0bPzWf98n6yVA/viewform";
+        
+        // Append latitude and longitude to the Google Form URL
+        googleFormUrl += "?entry.123456=" + latitude;  // Replace "entry.123456" with the actual entry ID for latitude
+        googleFormUrl += "&entry.789101=" + longitude;  // Replace "entry.789101" with the actual entry ID for longitude
+
+        // Redirect to the Google Form
+        window.location.href = googleFormUrl;
+      }, function(error) {
+        alert("Location access denied or unavailable.");
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  }
+
+  // Call the function to get the location and redirect
+  getLocation();
+</script>
+
 </body>
 </html>
