@@ -31,63 +31,63 @@
   <p id="status"></p>
 
   <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKrdhFMpLuzIV-iRH-5t9p6Ti9uBFxGUA1i3RdQIe2vjkuJMNqV3tEtcS6S_ac6OhdlQ/exec'; // ← replace this
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKrdhFMpLuzIV-iRH-5t9p6Ti9uBFxGUA1i3RdQIe2vjkuJMNqV3tEtcS6S_ac6OhdlQ/exec'; // Replace with your NEW working URL
 
-    function submitAttendance() {
-      const name = document.getElementById('nameInput').value.trim();
-      const status = document.getElementById('status');
-      if (!name) {
-        status.innerText = '❌ Please enter your name.';
-        return;
-      }
-
-      if (!navigator.geolocation) {
-        status.innerText = '❌ Geolocation not supported.';
-        return;
-      }
-
-      status.innerText = '📍 Getting location...';
-
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-
-          fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({ name, latitude, longitude }),
-            headers: { 'Content-Type': 'application/json' }
-          })
-          .then(res => res.json())
-          .then(data => {
-            console.log(data); // <-- Add this
-            if (data.status === 'success') {
-              if (data.locationMatch === '✅') {
-                status.innerText = '✅ Attendance recorded successfully!';
-              } else {
-                status.innerText = '⚠️ Attendance recorded, but location is outside allowed area.';
-              }
-            } else if (data.status === 'already_marked') {
-              status.innerText = '📌 You have already marked attendance today.';
-            } else {
-              status.innerText = '❌ Unexpected error occurred.';
-            }
-          })
-          .catch(async (err) => {
-            try {
-              const errorResponse = await err.response.json();
-              status.innerText = `❌ ${errorResponse.message || "Failed to submit."}`;
-            } catch {
-              status.innerText = `❌ Network or server error.`;
-            }
-          });
-
-        },
-        error => {
-          status.innerText = '❌ Location access denied or unavailable.';
-        }
-      );
+  async function submitAttendance() {
+    const name = document.getElementById('nameInput').value.trim();
+    const status = document.getElementById('status');
+    
+    if (!name) {
+      status.innerText = '❌ Please enter your name.';
+      return;
     }
-  </script>
+
+    if (!navigator.geolocation) {
+      status.innerText = '❌ Geolocation not supported.';
+      return;
+    }
+
+    status.innerText = '📍 Getting location...';
+
+    navigator.geolocation.getCurrentPosition(async position => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, latitude, longitude })
+        });
+
+        const data = await response.json();
+        console.log("Server response:", data); // 👈 logs real output
+
+        if (data.status === 'success') {
+          if (data.locationMatch === '✅') {
+            status.innerText = '✅ Attendance recorded successfully!';
+          } else {
+            status.innerText = '⚠️ Attendance recorded, but location is outside allowed area.';
+          }
+        } else if (data.status === 'already_marked') {
+          status.innerText = '📌 You have already marked attendance today.';
+        } else if (data.status === 'error') {
+          status.innerText = `❌ Server error: ${data.message}`;
+        } else {
+          status.innerText = '❌ Unknown server response.';
+        }
+
+      } catch (err) {
+        console.error("Fetch failed:", err);
+        status.innerText = `❌ Network error: ${err.message}`;
+      }
+
+    }, error => {
+      console.error("Geolocation error:", error);
+      status.innerText = '❌ Location access denied or unavailable.';
+    });
+  }
+</script>
+
 </body>
 </html>
