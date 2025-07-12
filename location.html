@@ -18,13 +18,22 @@
         // Google Form URL
         var googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd3tatQNfrJVt3T_1adV8d_egWQKElUll5Tw0bPzWf98n6yVA/viewform";
         
-        // Dynamically find the input fields using jsname
-        var latitudeInputField = document.querySelector("[jsname='YPqjbf']");
+        // Dynamically find the input fields based on labels for Latitude and Longitude
+        var latitudeLabel = document.querySelector(".M7eMe:contains('Latitude')");
+        var longitudeLabel = document.querySelector(".M7eMe:contains('Longitude')");
 
-        // If the input field exists, populate it with the latitude or longitude
-        if (latitudeInputField) {
-          // Assuming the first field is for Latitude
-          latitudeInputField.value = latitude;
+        // Find input fields following the labels
+        var latitudeInput = latitudeLabel ? latitudeLabel.closest('div').querySelector("input") : null;
+        var longitudeInput = longitudeLabel ? longitudeLabel.closest('div').querySelector("input") : null;
+
+        // If latitude input is found, fill it with latitude value
+        if (latitudeInput) {
+          latitudeInput.value = latitude;
+        }
+
+        // If longitude input is found, fill it with longitude value
+        if (longitudeInput) {
+          longitudeInput.value = longitude;
         }
 
         // Construct the URL with dynamic query parameters for Latitude and Longitude
