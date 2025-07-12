@@ -3,13 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Location Form</title>
+  <title>Location-Based Form Access</title>
   <script>
-    function getLocation() {
+    // Hardcoded allowed location (latitude, longitude)
+    const allowedLatitude = 40.748817;  // Replace with your latitude
+    const allowedLongitude = -73.985428;  // Replace with your longitude
+    const allowedRadius = 100;  // in meters
+
+    // Haversine formula to calculate distance between two latitudes/longitudes
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Radius of Earth in km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c * 1000; // Distance in meters
+      return distance;
+    }
+
+    // Function to check if the user is within the allowed location
+    function checkLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-          document.getElementById('latitude').value = position.coords.latitude;
-          document.getElementById('longitude').value = position.coords.longitude;
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+
+          // Calculate the distance between the user's location and the allowed location
+          const distance = getDistance(userLat, userLon, allowedLatitude, allowedLongitude);
+
+          // If the distance is within the allowed radius, show the form
+          if (distance <= allowedRadius) {
+            document.getElementById("formContainer").style.display = "block";
+          } else {
+            document.getElementById("locationError").style.display = "block";
+          }
         }, function(error) {
           alert("Error getting location: " + error.message);
         });
@@ -18,31 +48,29 @@
       }
     }
 
-    function onFormSubmit() {
-      // Ensure that the location is populated before submission
-      if (!document.getElementById('latitude').value || !document.getElementById('longitude').value) {
-        alert("Please allow location access.");
-        return false;
-      }
-      return true;
-    }
-
-    // Call getLocation on page load to automatically populate the fields
-    window.onload = getLocation;
+    // Run the location check when the page loads
+    window.onload = checkLocation;
   </script>
 </head>
 <body>
-  <form id="locationForm" action="YOUR_GOOGLE_FORM_URL_HERE" method="POST" onsubmit="return onFormSubmit()">
-    <label for="name">Your Name:</label>
-    <input type="text" id="name" name="entry.123456" required><br><br>
+  <h1>Location-Based Form Access</h1>
 
-    <label for="latitude">Latitude:</label>
-    <input type="text" id="latitude" name="entry.654321" readonly><br><br>
+  <div id="locationError" style="color: red; display: none;">
+    Sorry, this form is only accessible from a specific location. Please try again later.
+  </div>
 
-    <label for="longitude">Longitude:</label>
-    <input type="text" id="longitude" name="entry.987654" readonly><br><br>
+  <div id="formContainer" style="display: none;">
+    <!-- Your Google Form embed code or custom form goes here -->
+    <h2>Please fill out the form:</h2>
+    <form id="locationForm" action="https://docs.google.com/forms/d/e/1FAIpQLSd3tatQNfrJVt3T_1adV8d_egWQKElUll5Tw0bPzWf98n6yVA/formResponse" method="POST">
+      <!-- Your form fields go here -->
+      <input type="text" name="entry.123456" placeholder="Your Name" required><br><br>
 
-    <input type="submit" value="Submit">
-  </form>
+      <input type="hidden" name="entry.654321" id="latitude" value="">
+      <input type="hidden" name="entry.987654" id="longitude" value="">
+
+      <input type="submit" value="Submit">
+    </form>
+  </div>
 </body>
 </html>
