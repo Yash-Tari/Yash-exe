@@ -53,6 +53,8 @@
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
 
+status.innerText = `📍 Your location: ${latitude}, ${longitude}`;
+
       try {
             const formData = new FormData();
             formData.append("name", name);
