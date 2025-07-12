@@ -8,38 +8,30 @@
 <body>
 
 <script>
-  // Function to get location and redirect to Google Form
+  // Function to get location and auto-fill the form
   function getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
 
-        // Google Form URL
-        var googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd3tatQNfrJVt3T_1adV8d_egWQKElUll5Tw0bPzWf98n6yVA/viewform";
-        
-        // Dynamically find the input fields based on labels for Latitude and Longitude
-        var latitudeLabel = document.querySelector(".M7eMe:contains('Latitude')");
-        var longitudeLabel = document.querySelector(".M7eMe:contains('Longitude')");
+        // Find the Latitude input field using the jsname attribute
+        var latitudeInput = document.querySelector("[jsname='YPqjbf']");
 
-        // Find input fields following the labels
-        var latitudeInput = latitudeLabel ? latitudeLabel.closest('div').querySelector("input") : null;
-        var longitudeInput = longitudeLabel ? longitudeLabel.closest('div').querySelector("input") : null;
-
-        // If latitude input is found, fill it with latitude value
+        // If the input field is found, fill it with latitude
         if (latitudeInput) {
           latitudeInput.value = latitude;
         }
 
-        // If longitude input is found, fill it with longitude value
-        if (longitudeInput) {
-          longitudeInput.value = longitude;
-        }
+        // Optionally, you can log or alert the values to verify
+        console.log("Latitude: " + latitude);
+        console.log("Longitude: " + longitude);
 
-        // Construct the URL with dynamic query parameters for Latitude and Longitude
-        googleFormUrl += "?entry.123456=" + latitude + "&entry.789101=" + longitude;
+        // Construct Google Form URL with dynamic query parameters for Latitude and Longitude
+        var googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd3tatQNfrJVt3T_1adV8d_egWQKElUll5Tw0bPzWf98n6yVA/viewform";
+        googleFormUrl += "?entry.123456=" + latitude + "&entry.789101=" + longitude; // Replace entry IDs with actual ones
 
-        // Redirect to the Google Form with the location populated
+        // Redirect to the form with pre-filled data
         window.location.href = googleFormUrl;
       }, function(error) {
         alert("Location access denied or unavailable.");
@@ -49,7 +41,7 @@
     }
   }
 
-  // Call the function to get the location and redirect
+  // Call the function to get the location and auto-fill
   getLocation();
 </script>
 
