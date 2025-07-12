@@ -3,47 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Location Redirect</title>
+  <title>Location Form</title>
+  <script>
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          document.getElementById('latitude').value = position.coords.latitude;
+          document.getElementById('longitude').value = position.coords.longitude;
+        }, function(error) {
+          alert("Error getting location: " + error.message);
+        });
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+
+    function onFormSubmit() {
+      // Ensure that the location is populated before submission
+      if (!document.getElementById('latitude').value || !document.getElementById('longitude').value) {
+        alert("Please allow location access.");
+        return false;
+      }
+      return true;
+    }
+
+    // Call getLocation on page load to automatically populate the fields
+    window.onload = getLocation;
+  </script>
 </head>
 <body>
+  <form id="locationForm" action="YOUR_GOOGLE_FORM_URL_HERE" method="POST" onsubmit="return onFormSubmit()">
+    <label for="name">Your Name:</label>
+    <input type="text" id="name" name="entry.123456" required><br><br>
 
-<script>
-  // Function to get location and auto-fill the form
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
+    <label for="latitude">Latitude:</label>
+    <input type="text" id="latitude" name="entry.654321" readonly><br><br>
 
-        // Find the Latitude input field using the jsname attribute
-        var latitudeInput = document.querySelector("[jsname='YPqjbf']");
+    <label for="longitude">Longitude:</label>
+    <input type="text" id="longitude" name="entry.987654" readonly><br><br>
 
-        // If the input field is found, fill it with latitude
-        if (latitudeInput) {
-          latitudeInput.value = latitude;
-        }
-
-        // Optionally, you can log or alert the values to verify
-        console.log("Latitude: " + latitude);
-        console.log("Longitude: " + longitude);
-
-        // Construct Google Form URL with dynamic query parameters for Latitude and Longitude
-        var googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd3tatQNfrJVt3T_1adV8d_egWQKElUll5Tw0bPzWf98n6yVA/viewform";
-        googleFormUrl += "?entry.123456=" + latitude + "&entry.789101=" + longitude; // Replace entry IDs with actual ones
-
-        // Redirect to the form with pre-filled data
-        window.location.href = googleFormUrl;
-      }, function(error) {
-        alert("Location access denied or unavailable.");
-      });
-    } else {
-      alert("Geolocation is not supported by this browser.");
-    }
-  }
-
-  // Call the function to get the location and auto-fill
-  getLocation();
-</script>
-
+    <input type="submit" value="Submit">
+  </form>
 </body>
 </html>
