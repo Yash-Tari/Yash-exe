@@ -1,90 +1,274 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Taalchakra Attendance</title>
   <style>
+    /* Reset & base */
     body {
-      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #cc3300;
-      font-family: "Segoe UI", sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
       display: flex;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
-      color: #330000;
+      align-items: center;
+      min-height: 100vh;
     }
 
-    .container {
-      background-color: #ffd9cc;
-      padding: 2rem;
-      border-radius: 15px;
-      text-align: center;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    .panel {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
       width: 90%;
-      max-width: 400px;
+      max-width: 420px;
+      padding: 2rem 2.2rem 3rem;
+      text-align: center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
     img.logo {
-      max-width: 180px;
-      margin-bottom: 1rem;
+      width: 160px;
+      margin: 0 auto 1.5rem;
     }
 
     h2 {
-      margin-bottom: 0.5rem;
+      color: #cc3300;
+      margin: 0 0 0.5rem;
+      font-weight: 700;
+      font-size: 1.9rem;
     }
 
-    input {
+    p.instructions {
+      margin: 0 0 1.4rem;
+      color: #444;
       font-size: 1rem;
-      padding: 0.6rem;
-      width: 80%;
-      margin-bottom: 1rem;
-      border: 1px solid #cc3300;
-      border-radius: 5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      font-size: 1.1rem;
+      padding: 0.7rem 1rem;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #cc3300;
+      box-shadow: 0 0 6px #cc3300aa;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
     }
 
     button {
-      font-size: 1.1rem;
-      padding: 0.6rem 1.5rem;
-      background-color: #cc3300;
-      color: #fff;
-      border: none;
+      flex: 1 1 45%;
+      min-width: 120px;
+      font-size: 1.05rem;
+      padding: 0.6rem 1rem;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s;
+      border: none;
+      transition: background-color 0.3s ease;
+      font-weight: 600;
+      color: white;
+      user-select: none;
     }
 
-    button:hover {
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .btn-submit {
+      background-color: #cc3300;
+    }
+
+    .btn-submit:hover:not(:disabled) {
       background-color: #b32b00;
+    }
+
+    .btn-clear {
+      background-color: #e65c00;
+    }
+
+    .btn-clear:hover:not(:disabled) {
+      background-color: #b34700;
+    }
+
+    .btn-close {
+      background-color: #999;
+    }
+
+    .btn-close:hover:not(:disabled) {
+      background-color: #666;
     }
 
     #status {
       margin-top: 1rem;
-      font-weight: bold;
-      color: #660000;
+      font-weight: 600;
+      color: #cc3300;
       white-space: pre-wrap;
+      min-height: 2.2em;
+    }
+
+    /* Contact section */
+    .contact {
+      margin-top: 2rem;
+      border-top: 1px solid #eee;
+      padding-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      font-size: 1.3rem;
+      color: #cc3300;
+    }
+
+    .contact button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #cc3300;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      user-select: none;
+    }
+
+    .contact button:hover {
+      color: #b32b00;
+    }
+
+    /* Icons - using inline SVGs for simplicity */
+    .icon {
+      width: 24px;
+      height: 24px;
+      stroke-width: 2.2;
+      stroke: currentColor;
+      fill: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .panel {
+        padding: 1.6rem 1.5rem 2.2rem;
+      }
+
+      img.logo {
+        width: 130px;
+      }
+
+      input[type="text"] {
+        font-size: 1rem;
+        padding: 0.6rem 0.8rem;
+      }
+
+      button {
+        font-size: 1rem;
+        padding: 0.55rem 0.8rem;
+        flex: 1 1 100%;
+      }
+
+      .buttons {
+        gap: 0.5rem;
+      }
+
+      .contact {
+        gap: 1rem;
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <img src="Taalchakra Logo_Maroon_2024.png" alt="Taalchakra Logo" class="logo">
+  <div class="panel" id="attendancePanel">
+    <img src="Taalchakra Logo_Maroon_2024.png" alt="Taalchakra Logo" class="logo" />
     <h2>Taalchakra Attendance 014</h2>
-    <p>Please enter your name and click Submit</p>
-    <input type="text" id="firstNameInput" placeholder="First name" required />
-    <input type="text" id="lastNameInput" placeholder="Last name" required />
-    <br>
-    <button onclick="submitAttendance()">Submit Attendance</button>
+    <p class="instructions">Please enter your name and click Submit</p>
+    <input type="text" id="firstNameInput" placeholder="First name" autocomplete="given-name" />
+    <input type="text" id="lastNameInput" placeholder="Last name" autocomplete="family-name" />
+    <div class="buttons">
+      <button class="btn-submit" id="submitBtn" onclick="submitAttendance()">Submit</button>
+      <button class="btn-clear" id="clearBtn" onclick="clearForm()">Clear</button>
+      <button class="btn-close" id="closeBtn" onclick="closeUI()">Close</button>
+    </div>
     <p id="status"></p>
+
+    <div class="contact" aria-label="Contact information">
+      <button title="Call us" onclick="callNumber()">
+        <svg class="icon" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.21.37 2.39.72 3.52a2 2 0 0 1-.45 2.11L9.91 10.09a16 16 0 0 0 6 6l1.73-1.73a2 2 0 0 1 2.11-.45c1.13.35 2.31.59 3.52.72A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        Call
+      </button>
+      <button title="Copy email to clipboard" onclick="copyEmail()">
+        <svg class="icon" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M4 4h16v16H4z" />
+          <polyline points="22,6 12,13 2,6" />
+        </svg>
+        Email
+      </button>
+      <button title="Visit Instagram" onclick="openInstagram()">
+        <svg class="icon" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 11.37a4 4 0 1 1-4.73-4.73 4 4 0 0 1 4.73 4.73z"/>
+          <line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/>
+        </svg>
+        Instagram
+      </button>
+    </div>
   </div>
 
   <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec';
+    const status = document.getElementById('status');
+    const submitBtn = document.getElementById('submitBtn');
+    const attendancePanel = document.getElementById('attendancePanel');
+
+    function clearForm() {
+      document.getElementById('firstNameInput').value = '';
+      document.getElementById('lastNameInput').value = '';
+      status.innerText = '';
+      submitBtn.disabled = false;
+    }
+
+    function closeUI() {
+      attendancePanel.style.display = 'none';
+    }
+
+    function callNumber() {
+      window.location.href = 'tel:+917038252585'; // Replace with your actual phone number
+    }
+
+    function copyEmail() {
+      const email = 'taalchakradholtashapathak@gmail.com'; // Replace with your actual email
+      navigator.clipboard.writeText(email).then(() => {
+        alert(`Email address copied: ${email}`);
+      }).catch(() => {
+        alert('Failed to copy email. Please copy manually.');
+      });
+    }
+
+    function openInstagram() {
+      window.open('https://www.instagram.com/taalchakra_dhol_tasha_pathak?igsh=NDMwczNqcmxpNWE=', '_blank');
+    }
 
     async function submitAttendance() {
       const firstName = document.getElementById('firstNameInput').value.trim();
       const lastName = document.getElementById('lastNameInput').value.trim();
-      const status = document.getElementById('status');
 
       if (!firstName || !lastName) {
         status.innerText = '❌ Please enter both first and last name.';
@@ -97,12 +281,13 @@
       }
 
       status.innerText = '📍 Getting location...';
+      submitBtn.disabled = true;
 
       navigator.geolocation.getCurrentPosition(async position => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
 
-        status.innerText = `📍 Your location: ${latitude}, ${longitude}`;
+        status.innerText = `📍 Your location: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
 
         try {
           const formData = new FormData();
@@ -123,22 +308,33 @@
             status.innerText += data.locationMatch === '✅'
               ? '\n✅ Attendance recorded successfully!'
               : '\n⚠️ Attendance recorded, but location is outside allowed area.';
+
+            // Auto-close after 3 seconds
+            setTimeout(() => {
+              closeUI();
+            }, 3000);
+
           } else if (data.status === 'already_marked') {
             status.innerText += '\n📌 You have already marked attendance today.';
+            submitBtn.disabled = false;
           } else if (data.status === 'invalid_name') {
             status.innerText += `\n❌ ${data.message}`;
+            submitBtn.disabled = false;
           } else {
             status.innerText += '\n❌ Unknown server response.';
+            submitBtn.disabled = false;
           }
 
         } catch (err) {
           console.error("Fetch failed:", err);
           status.innerText = `❌ Network error: ${err.message}`;
+          submitBtn.disabled = false;
         }
 
       }, error => {
         console.error("Geolocation error:", error);
         status.innerText = '❌ Location access denied or unavailable.';
+        submitBtn.disabled = false;
       });
     }
   </script>
