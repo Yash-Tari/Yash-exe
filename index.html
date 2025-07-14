@@ -49,7 +49,7 @@
 
     /* ===== Titles and Text ===== */
     h2 {
-      color: #991f00;
+      color: #6b0f00; /* Darker maroon */
       font-weight: 700;
       font-size: 1.85rem;
       margin: 0 0 0.3rem;
@@ -59,9 +59,9 @@
 
     .instructions {
       font-size: 1rem;
-      color: #555;
+      color: #444;
       margin: 0 0 1rem;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     /* ===== Inputs ===== */
@@ -84,8 +84,8 @@
     }
 
     input[type="text"]:focus {
-      border-color: #991f00;
-      box-shadow: 0 0 10px #991f0077;
+      border-color: #6b0f00;
+      box-shadow: 0 0 10px #6b0f0077;
     }
 
     /* ===== Buttons Container ===== */
@@ -101,7 +101,7 @@
     button {
       flex: 1 1 45%;
       min-width: 120px;
-      background-color: #991f00;
+      background-color: #6b0f00;
       border: none;
       border-radius: 12px;
       color: white;
@@ -110,15 +110,15 @@
       padding: 0.75rem 1.2rem;
       cursor: pointer;
       user-select: none;
-      box-shadow: 0 5px 10px rgba(153, 31, 0, 0.45);
+      box-shadow: 0 5px 10px rgba(107, 15, 0, 0.45);
       transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       letter-spacing: 0.04em;
     }
 
     button:hover:not(:disabled) {
-      background-color: #b32a00;
-      box-shadow: 0 8px 18px rgba(179, 42, 0, 0.75);
+      background-color: #8a1800;
+      box-shadow: 0 8px 18px rgba(138, 24, 0, 0.75);
       transform: translateY(-3px);
     }
 
@@ -131,7 +131,7 @@
       cursor: not-allowed;
       opacity: 0.5;
       box-shadow: none;
-      background-color: #c9644a;
+      background-color: #b35743;
     }
 
     /* ===== Contact Buttons ===== */
@@ -146,8 +146,8 @@
       flex: 1;
       min-width: 100px;
       background-color: #f5f5f5;
-      color: #991f00;
-      border: 2.5px solid #991f00;
+      color: #6b0f00;
+      border: 2.5px solid #6b0f00;
       border-radius: 12px;
       font-weight: 600;
       font-size: 0.95rem;
@@ -162,10 +162,10 @@
     }
 
     .contact button:hover {
-      background-color: #991f00;
+      background-color: #6b0f00;
       color: #fff;
-      border-color: #b32a00;
-      box-shadow: 0 5px 12px rgba(179, 42, 0, 0.5);
+      border-color: #8a1800;
+      box-shadow: 0 5px 12px rgba(138, 24, 0, 0.5);
     }
 
     .icon-img {
@@ -182,26 +182,28 @@
       filter: brightness(0) saturate(100%) invert(95%) sepia(3%) saturate(0%) hue-rotate(1deg) brightness(100%) contrast(100%);
     }
 
-    /* Fallback text styling inside buttons if icon image is missing */
-    .contact button span.fallback-text {
-      display: none;
-      font-weight: 700;
-    }
-
-    /* Show fallback text if image fails to load */
-    .contact button img:not([src]) + span.fallback-text,
-    .contact button img[src=""] + span.fallback-text {
-      display: inline-block;
-    }
-
     /* Responsive tweaks */
     @media (max-width: 400px) {
       .panel {
         padding: 1.7rem 1.5rem 2rem;
       }
 
-      button {
+      .buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      /* Submit button full width */
+      .btn-submit {
         flex: 1 1 100%;
+        min-width: unset;
+      }
+
+      /* Place clear and close below submit */
+      .btn-clear,
+      .btn-close {
+        flex: 1 1 100%;
+        min-width: unset;
       }
 
       .contact {
@@ -219,8 +221,8 @@
 <body>
   <div class="panel" id="attendancePanel">
     <img src="Taalchakra Logo_Maroon_2024.png" alt="Taalchakra Logo" class="logo" />
-    <h2>Taalchakra Attendance 014</h2>
-    <p class="instructions">Please enter your name and click Submit</p>
+    <h2>Taalchakra Attendance</h2>
+    <p class="instructions">Please enter your first and last name</p>
     <input type="text" id="firstNameInput" placeholder="First name" autocomplete="given-name" />
     <input type="text" id="lastNameInput" placeholder="Last name" autocomplete="family-name" />
     <div class="buttons">
@@ -228,7 +230,7 @@
       <button class="btn-clear" id="clearBtn" onclick="clearForm()">Clear</button>
       <button class="btn-close" id="closeBtn" onclick="closeUI()">Close</button>
     </div>
-    <p id="status"></p>
+    <p id="status" style="white-space: pre-line; font-weight: 600; min-height: 3em; color: #6b0f00;"></p>
 
     <div class="contact" aria-label="Contact information">
       <button title="Call us" onclick="callNumber()">
@@ -285,23 +287,23 @@
       const lastName = document.getElementById('lastNameInput').value.trim();
 
       if (!firstName || !lastName) {
-        status.innerText = '❌ Please enter both first and last name.';
+        status.innerText = 'Please enter both first and last name.';
         return;
       }
 
       if (!navigator.geolocation) {
-        status.innerText = '❌ Geolocation not supported.';
+        status.innerText = 'Geolocation not supported.';
         return;
       }
 
-      status.innerText = '📍 Getting location...';
+      status.innerText = 'Getting location...';
       submitBtn.disabled = true;
 
       navigator.geolocation.getCurrentPosition(async position => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
 
-        status.innerText = `📍 Your location: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+        status.innerText = `Your location: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
 
         try {
           const formData = new FormData();
@@ -320,8 +322,8 @@
 
           if (data.status === 'success') {
             status.innerText += data.locationMatch === '✅'
-              ? '\n✅ Attendance recorded successfully!'
-              : '\n⚠️ Attendance recorded, but location is outside allowed area.';
+              ? '\nPresent\nWithin location'
+              : '\nPresent\nOut of location';
 
             // Auto-close after 3 seconds
             setTimeout(() => {
@@ -329,26 +331,29 @@
             }, 3000);
 
           } else if (data.status === 'already_marked') {
-            status.innerText += '\n📌 You have already marked attendance today.';
+            status.innerText += '\nYou have already marked attendance today.';
             submitBtn.disabled = false;
-          } else if (data.status === 'invalid_name') {
-            status.innerText += `\n❌ ${data.message}`;
+          } else if (data.status === 'out_of_time') {
+            status.innerText = 'Attendance can only be marked between 6:30 PM and 9 PM IST.';
             submitBtn.disabled = false;
           } else {
-            status.innerText += '\n❌ Unknown server response.';
+            status.innerText = data.message || 'Error: Could not mark attendance.';
             submitBtn.disabled = false;
           }
 
-        } catch (err) {
-          console.error("Fetch failed:", err);
-          status.innerText = `❌ Network error: ${err.message}`;
+        } catch (error) {
+          console.error(error);
+          status.innerText = 'Network or server error. Please try again.';
           submitBtn.disabled = false;
         }
-
       }, error => {
-        console.error("Geolocation error:", error);
-        status.innerText = '❌ Location access denied or unavailable.';
+        console.error(error);
+        status.innerText = 'Location access denied or unavailable.';
         submitBtn.disabled = false;
+      }, {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0
       });
     }
   </script>
