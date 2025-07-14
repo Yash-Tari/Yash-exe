@@ -21,40 +21,24 @@
       margin-top: 1rem;
       font-weight: bold;
     }
+    iframe {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <h2>Admin Panel – Set Attendance Location 11</h2>
+  <h2>Admin Panel – Set Attendance Location</h2>
   <p>Enter new latitude and longitude:</p>
 
-  <input type="text" id="lat" placeholder="Latitude" /><br>
-  <input type="text" id="lng" placeholder="Longitude" /><br>
+  <form id="locationForm" target="hiddenFrame" method="GET"
+    action="https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec"
+    onsubmit="document.getElementById('status').innerText = '⏳ Updating...';">
+    <input type="text" name="lat" placeholder="Latitude" required /><br>
+    <input type="text" name="lng" placeholder="Longitude" required /><br>
+    <button type="submit">Update Location</button>
+  </form>
 
-  <button onclick="updateLocation()">Update Location</button>
-
-  <p id="status"></p>
-
-  <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec';
-    function updateLocation() {
-      const lat = document.getElementById("lat").value.trim();
-      const lng = document.getElementById("lng").value.trim();
-      const status = document.getElementById("status");
-
-      if (!lat || !lng) {
-        status.innerText = "❌ Please enter both values.";
-        return;
-      }
-
-      fetch(`${SCRIPT_URL}?lat=${lat}&lng=${lng}`)
-        .then(res => res.text())
-        .then(data => {
-          status.innerText = data;
-        })
-        .catch(err => {
-          status.innerText = `❌ Error: ${err.message}`;
-        });
-    }
-  </script>
+  <p id="status">✅ Ready to update location</p>
+  <iframe name="hiddenFrame" onload="document.getElementById('status').innerText = '✅ Location updated successfully!'"></iframe>
 </body>
 </html>
