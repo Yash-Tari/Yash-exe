@@ -71,7 +71,8 @@
     <img src="Taalchakra Logo_Maroon_2024.png" alt="Taalchakra Logo" class="logo">
     <h2>Taalchakra Attendance 013</h2>
     <p>Please enter your name and click Submit</p>
-    <input type="text" id="nameInput" placeholder="Enter your name" required />
+    <input type="text" id="firstNameInput" placeholder="First name" required />
+    <input type="text" id="lastNameInput" placeholder="Last name" required />
     <br>
     <button onclick="submitAttendance()">Submit Attendance</button>
     <p id="status"></p>
@@ -81,11 +82,12 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec';
 
     async function submitAttendance() {
-      const name = document.getElementById('nameInput').value.trim();
+      const firstName = document.getElementById('firstNameInput').value.trim();
+      const lastName = document.getElementById('lastNameInput').value.trim();
       const status = document.getElementById('status');
-      
-      if (!name) {
-        status.innerText = '❌ Please enter your name.';
+
+      if (!firstName || !lastName) {
+        status.innerText = '❌ Please enter both first and last name.';
         return;
       }
 
@@ -104,10 +106,11 @@
 
         try {
           const formData = new FormData();
-          formData.append("name", name);
+          formData.append("firstName", firstName);
+          formData.append("lastName", lastName);
           formData.append("latitude", latitude);
           formData.append("longitude", longitude);
-          
+
           const response = await fetch(SCRIPT_URL, {
             method: 'POST',
             body: formData
@@ -117,15 +120,13 @@
           console.log("Server response:", data);
 
           if (data.status === 'success') {
-            if (data.locationMatch === '✅') {
-              status.innerText += '\n✅ Attendance recorded successfully!';
-            } else {
-              status.innerText += '\n⚠️ Attendance recorded, but location is outside allowed area.';
-            }
+            status.innerText += data.locationMatch === '✅'
+              ? '\n✅ Attendance recorded successfully!'
+              : '\n⚠️ Attendance recorded, but location is outside allowed area.';
           } else if (data.status === 'already_marked') {
             status.innerText += '\n📌 You have already marked attendance today.';
-          } else if (data.status === 'error') {
-            status.innerText += `\n❌ Server error: ${data.message}`;
+          } else if (data.status === 'invalid_name') {
+            status.innerText += `\n❌ ${data.message}`;
           } else {
             status.innerText += '\n❌ Unknown server response.';
           }
