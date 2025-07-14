@@ -39,7 +39,8 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec';
 
     // Load configured location from Sheet on load
-    fetch(SCRIPT_URL + "?action=config")
+    // Load config (no need for ?action=config)
+    fetch(SCRIPT_URL)
       .then(res => res.json())
       .then(data => {
         document.getElementById("lat").value = data.lat;
@@ -50,6 +51,7 @@
         document.getElementById('status').innerText = '⚠️ Failed to load location from sheet.';
         console.error(err);
       });
+
 
     function getCurrentLocation() {
       const status = document.getElementById('status');
