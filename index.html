@@ -129,6 +129,22 @@ button:disabled {
   }
 }
 
+  .icon-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    margin-right: 6px;
+    vertical-align: middle;
+    filter: brightness(0) saturate(100%) invert(27%) sepia(83%) saturate(2236%) hue-rotate(1deg) brightness(98%) contrast(102%);
+    /* The filter tries to replicate your maroon color. Adjust if needed. */
+    transition: filter 0.3s ease;
+  }
+  
+  .contact button:hover .icon-img {
+    filter: brightness(0) saturate(100%) invert(35%) sepia(82%) saturate(2103%) hue-rotate(2deg) brightness(92%) contrast(93%);
+  }
+
+
   </style>
 </head>
 <body>
@@ -145,32 +161,21 @@ button:disabled {
     </div>
     <p id="status"></p>
 
-    <div class="contact" aria-label="Contact information">
-      <button title="Call us" onclick="callNumber()">
-        <!-- Call icon -->
-        <svg class="icon" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" fill="currentColor">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.21.37 2.39.72 3.52a2 2 0 0 1-.45 2.11L9.91 10.09a16 16 0 0 0 6 6l1.73-1.73a2 2 0 0 1 2.11-.45c1.13.35 2.31.59 3.52.72A2 2 0 0 1 22 16.92z"/>
-        </svg>
-        Call
-      </button>
-      <button title="Copy email to clipboard" onclick="copyEmail()">
-      <!-- Email icon -->
-      <svg class="icon" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" fill="currentColor">
-        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
-        <polyline points="22,6 12,13 2,6" stroke="#fff" fill="none"/>
-      </svg>
-        Email
-      </button>
-      <button title="Visit Instagram" onclick="openInstagram()">
-        <!-- Instagram icon -->
-        <svg class="icon" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" fill="currentColor">
-          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-          <circle cx="12" cy="12" r="4" stroke="#fff" fill="none"/>
-          <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" stroke="#fff" />
-        </svg>
-        Instagram
-      </button>
-    </div>
+  <div class="contact" aria-label="Contact information">
+    <button title="Call us" onclick="callNumber()">
+      <img src="outcoming-call_6730844.png" alt="Call icon" class="icon-img" />
+      Call
+    </button>
+    <button title="Copy email to clipboard" onclick="copyEmail()">
+      <img src="mail-icon_8056414.png" alt="Email icon" class="icon-img" />
+      Email
+    </button>
+    <button title="Visit Instagram" onclick="openInstagram()">
+      <img src="instagram_725339.png" alt="Instagram icon" class="icon-img" />
+      Instagram
+    </button>
+  </div>
+
   </div>
 
   <script>
