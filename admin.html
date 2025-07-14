@@ -21,24 +21,62 @@
       margin-top: 1rem;
       font-weight: bold;
     }
-    iframe {
-      display: none;
-    }
   </style>
 </head>
 <body>
   <h2>Admin Panel – Set Attendance Location</h2>
-  <p>Enter new latitude and longitude:</p>
+  <p>Enter or auto-detect latitude and longitude:</p>
 
-  <form id="locationForm" target="hiddenFrame" method="GET"
-    action="https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec"
-    onsubmit="document.getElementById('status').innerText = '⏳ Updating...';">
-    <input type="text" name="lat" placeholder="Latitude" required /><br>
-    <input type="text" name="lng" placeholder="Longitude" required /><br>
-    <button type="submit">Update Location</button>
-  </form>
+  <input type="text" id="lat" name="lat" placeholder="Latitude" required /><br>
+  <input type="text" id="lng" name="lng" placeholder="Longitude" required /><br>
 
-  <p id="status">✅ Ready to update location</p>
-  <iframe name="hiddenFrame" onload="document.getElementById('status').innerText = '✅ Location updated successfully!'"></iframe>
+  <button onclick="updateLocation()">Update Location</button>
+  <p id="status">📍 Detecting your current location...</p>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec';
+
+    // Auto-detect location
+    window.onload = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const lat = position.coords.latitude.toFixed(6);
+            const lng = position.coords.longitude.toFixed(6);
+            document.getElementById('lat').value = lat;
+            document.getElementById('lng').value = lng;
+            document.getElementById('status').innerText = `📍 Auto-filled location: ${lat}, ${lng}`;
+          },
+          error => {
+            document.getElementById('status').innerText = '⚠️ Unable to auto-detect location.';
+            console.error(error);
+          }
+        );
+      } else {
+        document.getElementById('status').innerText = '❌ Geolocation is not supported.';
+      }
+    };
+
+    function updateLocation() {
+      const lat = document.getElementById("lat").value.trim();
+      const lng = document.getElementById("lng").value.trim();
+      const status = document.getElementById("status");
+
+      if (!lat || !lng) {
+        status.innerText = "❌ Please enter both latitude and longitude.";
+        return;
+      }
+
+      status.innerText = "⏳ Updating location...";
+      fetch(`${SCRIPT_URL}?lat=${lat}&lng=${lng}`)
+        .then(res => res.text())
+        .then(data => {
+          status.innerText = data;
+        })
+        .catch(err => {
+          status.innerText = `❌ Error: ${err.message}`;
+        });
+    }
+  </script>
 </body>
 </html>
