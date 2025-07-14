@@ -5,207 +5,130 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Taalchakra Attendance</title>
   <style>
-    /* Reset & base */
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #cc3300;
-      color: #333;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .panel {
-      background-color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-      width: 90%;
-      max-width: 420px;
-      padding: 2rem 2.2rem 3rem;
-      text-align: center;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    img.logo {
-      width: 180px; /* Slightly bigger */
-      margin: 0 auto 1.5rem;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
-    }
-
-    h2 {
-      color: #cc3300;
-      margin: 0 0 0.5rem;
-      font-weight: 700;
-      font-size: 1.9rem;
-    }
-
-    p.instructions {
-      margin: 0 0 1.4rem;
-      color: #444;
-      font-size: 1rem;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      font-size: 1.1rem;
-      padding: 0.7rem 1rem;
-      border: 1.5px solid #ccc;
-      border-radius: 8px;
-      transition: border-color 0.3s ease;
-    }
-
-    input[type="text"]:focus {
-      outline: none;
-      border-color: #cc3300;
-      box-shadow: 0 0 6px #cc3300aa;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-
-    button {
-      flex: 1 1 45%;
-      min-width: 120px;
-      font-size: 1.05rem;
-      padding: 0.7rem 1.1rem;
-      border-radius: 10px;
-      cursor: pointer;
-      border: none;
-      transition: background-color 0.3s ease, box-shadow 0.25s ease, transform 0.15s ease;
-      font-weight: 600;
-      color: white;
-      user-select: none;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.12);
-    }
-
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .btn-submit {
-      background-color: #cc3300;
-    }
-
-    button:hover:not(:disabled) {
-      box-shadow: 0 6px 12px rgba(0,0,0,0.18);
-      transform: scale(1.03);
-    }
-
-    .btn-clear {
-      background-color: #e65c00;
-    }
-
-    .btn-submit:hover:not(:disabled) {
-      background-color: #b32b00;
-    }
-    
-    .btn-clear:hover:not(:disabled) {
-      background-color: #b34700;
-    }
-    
-    .btn-close:hover:not(:disabled) {
-      background-color: #666;
+  /* ===== Base & Reset ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-    .btn-close {
-      background-color: #999;
-    }
 
-    .btn-close:hover:not(:disabled) {
-      background-color: #666;
-    }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #cc3300;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+}
 
-    #status {
-      margin-top: 1rem;
-      font-weight: 600;
-      color: #cc3300;
-      white-space: pre-wrap;
-      min-height: 2.2em;
-    }
+/* ===== Container ===== */
+.panel {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  width: 90%;
+  max-width: 400px;
+  padding: 2.5rem 2rem 3rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  position: relative;
+}
 
-    /* Contact section */
-    .contact {
-      margin-top: 2rem;
-      border-top: 1px solid #eee;
-      padding-top: 1rem;
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      font-size: 1.3rem;
-      color: #cc3300;
-    }
+/* ===== Logo ===== */
+.logo {
+  width: 160px;
+  margin: 0 auto 1.4rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
 
-    .contact button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #cc3300;
-      transition: color 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      user-select: none;
-    }
+/* ===== Titles and Text ===== */
+h2 {
+  color: #cc3300;
+  font-weight: 700;
+  font-size: 1.9rem;
+  margin: 0 0 0.4rem;
+}
 
-    .contact button:hover {
-      color: #b32b00;
-    }
+.instructions {
+  font-size: 1rem;
+  color: #444;
+  margin: 0 0 1.2rem;
+}
 
-    /* Icons - using inline SVGs for simplicity */
-    .icon {
-      width: 24px;
-      height: 24px;
-      stroke-width: 2.2;
-      stroke: currentColor;
-      fill: #cc3300; /* added fill */
-    }
+/* ===== Inputs ===== */
+input[type="text"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  border: 1.5px solid #ccc;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+}
 
-    /* On hover of contact buttons, make icons fill color a bit darker */
-    .contact button:hover .icon {
-      fill: #b32b00;
-    }
+input[type="text"]:focus {
+  border-color: #cc3300;
+  box-shadow: 0 0 8px #cc3300aa;
+}
 
-    /* Responsive */
-    @media (max-width: 480px) {
-      .panel {
-        padding: 1.6rem 1.5rem 2.2rem;
-      }
+/* ===== Buttons Container ===== */
+.buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.2rem;
+}
 
-      img.logo {
-        width: 130px;
-      }
+/* ===== Buttons ===== */
+button {
+  flex: 1 1 45%;
+  min-width: 120px;
+  background-color: #cc3300;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.14);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+}
 
-      input[type="text"] {
-        font-size: 1rem;
-        padding: 0.6rem 0.8rem;
-      }
+button:hover:not(:disabled) {
+  background-color: #b32a00;
+  box-shadow: 0 5px 14px rgba(179, 42, 0, 0.6);
+  transform: translateY(-2px);
+}
 
-      button {
-        font-size: 1rem;
-        padding: 0.55rem 0.8rem;
-        flex: 1 1 100%;
-      }
+button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
 
-      .buttons {
-        gap: 0.5rem;
-      }
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
 
-      .contact {
-        gap: 1rem;
-        font-size: 1.1rem;
-      }
-    }
+/* ===== Responsive ===== */
+@media (max-width: 400px) {
+  .panel {
+    padding: 2rem 1.5rem 2.5rem;
+  }
+
+  button {
+    flex: 1 1 100%;
+  }
+}
+
   </style>
 </head>
 <body>
