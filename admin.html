@@ -217,9 +217,16 @@
       window.open(SHEET_URL, '_blank');
     }
 
-    function closePanel() {
+function closePanel() {
+  if (window.confirm("Are you sure you want to close this tab?")) {
+    window.close();
+
+    // Fallback: hide panel if tab can't be closed
+    setTimeout(() => {
       document.getElementById('adminPanel').classList.add('hidden');
-    }
+    }, 200);
+  }
+}
   </script>
 </body>
 </html>
