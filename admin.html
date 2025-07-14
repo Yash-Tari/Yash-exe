@@ -24,38 +24,54 @@
   </style>
 </head>
 <body>
-  <h2>Admin Panel – Set Attendance Location 12</h2>
+  <h2>Admin Panel – Set Attendance Location</h2>
   <p>Enter or auto-detect latitude and longitude:</p>
 
   <input type="text" id="lat" name="lat" placeholder="Latitude" required /><br>
   <input type="text" id="lng" name="lng" placeholder="Longitude" required /><br>
 
   <button onclick="updateLocation()">Update Location</button>
-  <p id="status">📍 Detecting your current location...</p>
+  <button onclick="getCurrentLocation()">Get Current Location</button>
+
+  <p id="status">📍 Loading configured location from sheet...</p>
 
   <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec';
 
-    // Auto-detect location
-    window.onload = () => {
+    // Load configured location from Sheet on load
+    fetch(SCRIPT_URL + "?action=config")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("lat").value = data.lat;
+        document.getElementById("lng").value = data.lng;
+        document.getElementById('status').innerText = `📍 Loaded configured location: ${data.lat}, ${data.lng}`;
+      })
+      .catch(err => {
+        document.getElementById('status').innerText = '⚠️ Failed to load location from sheet.';
+        console.error(err);
+      });
+
+    function getCurrentLocation() {
+      const status = document.getElementById('status');
       if (navigator.geolocation) {
+        status.innerText = '📡 Getting current location...';
         navigator.geolocation.getCurrentPosition(
           position => {
             const lat = position.coords.latitude.toFixed(6);
             const lng = position.coords.longitude.toFixed(6);
             document.getElementById('lat').value = lat;
             document.getElementById('lng').value = lng;
-            document.getElementById('status').innerText = `📍 Auto-filled location: ${lat}, ${lng}`;
+            status.innerText = `📍 Auto-filled current location: ${lat}, ${lng}`;
           },
           error => {
-            document.getElementById('status').innerText = '⚠️ Unable to auto-detect location.';
+            status.innerText = '❌ Failed to get location.';
             console.error(error);
           }
         );
       } else {
-        document.getElementById('status').innerText = '❌ Geolocation is not supported.';
+        status.innerText = '❌ Geolocation not supported in this browser.';
       }
-    };
+    }
 
     function updateLocation() {
       const lat = document.getElementById("lat").value.trim();
