@@ -417,10 +417,10 @@ button.btn-close {
         document.getElementById('confTime').innerText = now.toLocaleString('en-IN', options);
 
         if (data.locationMatch === '✅') {
-          document.getElementById('confStatus').innerText = 'Within Location ✅';
+          document.getElementById('confStatus').innerText = 'Within Location';
           document.getElementById('confStatus').style.color = 'green';
         } else {
-          document.getElementById('confStatus').innerText = 'Outside Location ❌';
+          document.getElementById('confStatus').innerText = 'Outside Location';
           document.getElementById('confStatus').style.color = 'red';
         }
 
