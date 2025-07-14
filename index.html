@@ -88,16 +88,7 @@
       box-shadow: 0 0 10px #6b0f0077;
     }
 
-    /* ===== Buttons Container ===== */
-    .buttons {
-      display: flex;
-      gap: 0.8rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-
-  /* ===== Buttons Container ===== */
+/* ===== Buttons Container ===== */
 .buttons {
   display: flex;
   flex-direction: column;
@@ -107,7 +98,7 @@
 
 /* ===== Submit Button ===== */
 button.btn-submit {
-  background-color: #009688; /* teal */
+  background-color: #6b0f00; /* maroon */
   color: white;
   font-size: 1.3rem;
   font-weight: 800;
@@ -115,16 +106,18 @@ button.btn-submit {
   border-radius: 12px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 6px 15px rgba(0, 150, 136, 0.4);
+  box-shadow: 0 6px 15px rgba(107, 15, 0, 0.4);
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
   width: 100%;
   max-width: none;
   letter-spacing: 0.05em;
+  height: 48px; /* fixed height */
+  line-height: 48px;
 }
 
 button.btn-submit:hover:not(:disabled) {
-  background-color: #00796b;
-  box-shadow: 0 8px 20px rgba(0, 121, 107, 0.7);
+  background-color: #8a1800;
+  box-shadow: 0 8px 20px rgba(138, 24, 0, 0.7);
   transform: translateY(-3px);
 }
 
@@ -133,44 +126,53 @@ button.btn-submit:active:not(:disabled) {
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
 }
 
+/* ===== Clear and Close Buttons Container ===== */
+.buttons .secondary-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
 /* ===== Clear and Close Buttons ===== */
 button.btn-clear,
 button.btn-close {
   background-color: transparent;
-  border: 2.5px solid #009688;
-  color: #009688;
+  border: 2.5px solid #6b0f00;
+  color: #6b0f00;
   font-weight: 700;
-  font-size: 1.1rem;
-  padding: 0.75rem 0;
+  font-size: 1.05rem;
+  padding: 0;
   border-radius: 12px;
   cursor: pointer;
-  width: 100%;
-  max-width: none;
+  flex: 1; /* share equal width */
   box-shadow: none;
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
+  height: 48px; /* same height as submit */
+  line-height: 48px;
 }
 
 button.btn-clear:hover,
 button.btn-close:hover {
-  background-color: #009688;
+  background-color: #6b0f00;
   color: white;
-  border-color: #00796b;
-  box-shadow: 0 5px 12px rgba(0, 121, 107, 0.5);
+  border-color: #8a1800;
+  box-shadow: 0 5px 12px rgba(138, 24, 0, 0.5);
 }
 
 button.btn-clear:active,
 button.btn-close:active {
-  background-color: #00796b;
-  border-color: #004d40;
+  background-color: #8a1800;
+  border-color: #4a0a00;
 }
 
 /* Responsive tweaks */
 @media (max-width: 400px) {
-  .buttons {
+  .buttons .secondary-buttons {
     gap: 0.75rem;
   }
 }
+
 
 
     /* ===== Contact Buttons ===== */
@@ -266,8 +268,10 @@ button.btn-close:active {
     <input type="text" id="lastNameInput" placeholder="Last name" autocomplete="family-name" />
     <div class="buttons">
       <button class="btn-submit" id="submitBtn" onclick="submitAttendance()">Submit</button>
-      <button class="btn-clear" id="clearBtn" onclick="clearForm()">Clear</button>
-      <button class="btn-close" id="closeBtn" onclick="closeUI()">Close</button>
+      <div class="secondary-buttons">
+        <button class="btn-clear" id="clearBtn" onclick="clearForm()">Clear</button>
+        <button class="btn-close" id="closeBtn" onclick="closeUI()">Close</button>
+      </div>
     </div>
     <p id="status" style="white-space: pre-line; font-weight: 600; min-height: 3em; color: #6b0f00;"></p>
 
