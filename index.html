@@ -166,6 +166,15 @@ button.btn-close:active {
   border-color: #4a0a00;
 }
 
+/* ===== Shared Button Height and Line Height ===== */
+button.btn-submit,
+button.btn-clear,
+button.btn-close {
+  height: 48px;
+  line-height: 48px;
+  padding: 0; /* ensure no vertical stretching */
+}
+
 /* Responsive tweaks */
 @media (max-width: 400px) {
   .buttons .secondary-buttons {
