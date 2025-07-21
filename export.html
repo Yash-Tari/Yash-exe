@@ -2,48 +2,71 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Export Attendance PDF</title>
+  <title>Export Attendance</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #fefefe;
-      color: #333;
-      padding: 2rem;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 2rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       text-align: center;
     }
 
     h2 {
       color: #cc3300;
+      margin-bottom: 1.5rem;
     }
 
     input[type="date"] {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       padding: 0.6rem;
-      margin: 1rem 0;
+      margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 6px;
     }
 
     button {
       font-size: 1rem;
-      padding: 0.6rem 1rem;
+      padding: 0.6rem 1.2rem;
+      margin: 0.4rem;
       background-color: #cc3300;
-      color: #fff;
+      color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
       background-color: #b12c00;
     }
+
+    #message {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: #333;
+    }
   </style>
 </head>
 <body>
-  <h2>Export Attendance PDF</h2>
-  <input type="date" id="exportDate" required />
-  <br>
-  <button onclick="downloadPDF()">Download PDF</button>
+  <div class="container">
+    <h2>Export Attendance</h2>
+    <input type="date" id="exportDate" required />
+    <br>
+    <button onclick="downloadPDF()">Download PDF</button>
+    <button onclick="downloadExcel()">Download Excel</button>
+    <div id="message"></div>
+  </div>
 
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec";
@@ -55,13 +78,31 @@
 
     function downloadPDF() {
       const date = document.getElementById("exportDate").value;
-      if (!date) {
-        alert("Please select a date");
-        return;
-      }
-
+      if (!date) return alert("Please select a date.");
       const url = `${SCRIPT_URL}?mode=getPdfData&date=${date}`;
-      window.open(url, "_blank"); // open PDF in new tab
+      window.open(url, "_blank"); // Opens PDF in a new tab
+    }
+
+    function downloadExcel() {
+      const date = document.getElementById("exportDate").value;
+      if (!date) return alert("Please select a date.");
+      const url = `${SCRIPT_URL}?mode=exportExcelData&date=${date}`;
+      
+      // Fetch the link and redirect to it
+      fetch(url)
+        .then(res => res.text())
+        .then(link => {
+          if (link.startsWith("http")) {
+            window.open(link, "_blank"); // Opens downloadable Excel
+            document.getElementById("message").innerText = "✅ Excel file is ready for download.";
+          } else {
+            document.getElementById("message").innerText = `❌ ${link}`;
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById("message").innerText = "❌ Failed to export Excel. Try again.";
+        });
     }
   </script>
 </body>
