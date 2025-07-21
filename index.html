@@ -359,6 +359,7 @@ button.btn-close {
     <p class="instructions">Please enter your first and last name</p>
     <input type="text" id="firstNameInput" onkeyup="showSuggestions()" placeholder="First name" autocomplete="off" />
     <input type="text" id="lastNameInput" onkeyup="showSuggestions()" placeholder="Last name" autocomplete="off" />
+    <div id="suggestions"></div>
     <div class="buttons">
       <button class="btn-submit" id="submitBtn" onclick="submitAttendance()">Submit</button>
       <div class="secondary-buttons">
@@ -577,35 +578,38 @@ function closeConfirmation() {
 
   </script>
 
-   <script>
-      let nameList = [];
+  <script>
+  let nameList = [];
 
-      google.script.run.withSuccessHandler(function(data) {
-        nameList = data;
-      }).getNames();
+  // Load name list on page load
+  google.script.run.withSuccessHandler(function(data) {
+    nameList = data;
+    console.log("Loaded names:", nameList);
+  }).getNames();
 
-      function showSuggestions() {
-        const input = document.getElementById("nameInput").value.toLowerCase();
-        const suggestionsDiv = document.getElementById("suggestions");
-        suggestionsDiv.innerHTML = "";
-        suggestionsDiv.style.display = "none";
+  function showSuggestions() {
+    const firstInput = document.getElementById("firstNameInput").value.trim().toLowerCase();
+    const lastInput = document.getElementById("lastNameInput").value.trim().toLowerCase();
 
-        if (!input) return;
+    const suggestions = nameList.filter(nameObj => {
+      const firstMatch = nameObj.firstName.toLowerCase().startsWith(firstInput);
+      const lastMatch = nameObj.lastName.toLowerCase().startsWith(lastInput);
 
-        const matches = nameList.filter(name => name.toLowerCase().includes(input));
-        if (matches.length > 0) {
-          suggestionsDiv.style.display = "block";
-          matches.forEach(name => {
-            const div = document.createElement("div");
-            div.textContent = name;
-            div.onclick = () => {
-              document.getElementById("nameInput").value = name;
-              suggestionsDiv.style.display = "none";
-            };
-            suggestionsDiv.appendChild(div);
-          });
-        }
-      }
-    </script>
+      // If both fields have input, match both
+      if (firstInput && lastInput) return firstMatch && lastMatch;
+
+      // If only one is typed, match that
+      if (firstInput) return firstMatch;
+      if (lastInput) return lastMatch;
+
+      return false;
+    });
+
+    // Display results
+    const suggestionBox = document.getElementById("suggestions");
+    suggestionBox.innerHTML = suggestions.map(n => `<div>${n.fullName}</div>`).join("");
+  }
+</script>
+
 </body>
 </html>
