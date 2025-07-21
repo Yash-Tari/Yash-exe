@@ -55,7 +55,7 @@
   </style>
 </head>
 <body>
-  <h2>Export Attendance PDF 1</h2>
+  <h2>Export Attendance PDF 2</h2>
   <input type="date" id="exportDate" required />
   <br>
   <button onclick="downloadPDF()">Download PDF</button>
@@ -127,7 +127,7 @@ async function downloadPDF() {
       console.error(error);
       status.textContent = "❌ Failed to generate PDF.";
     })
-    .getAttendanceDataByDate({ parameter: { date } }); // Call your backend function
+    .getAttendanceDataByDate(date);
 }
 
   </script>
