@@ -73,63 +73,63 @@
       document.getElementById('exportDate').value = today;
     });
 
-    async function downloadPDF() {
-      const date = document.getElementById('exportDate').value;
-      const status = document.getElementById('status');
+async function downloadPDF() {
+  const date = document.getElementById('exportDate').value;
+  const status = document.getElementById('status');
 
-      if (!date) {
-        alert("Please select a date.");
+  if (!date) {
+    alert("Please select a date.");
+    return;
+  }
+
+  status.textContent = "⏳ Fetching data...";
+
+  google.script.run
+    .withSuccessHandler((json) => {
+      if (json.status !== "success") {
+        status.textContent = `❌ ${json.message}`;
         return;
       }
 
-      status.textContent = "⏳ Fetching data...";
+      const data = json.data;
+      if (!data || data.length === 0) {
+        status.textContent = "⚠️ No attendance records found for this date.";
+        return;
+      }
 
-      try {
-        const res = await fetch(`${SCRIPT_URL}?date=${date}`);
-        const json = await res.json();
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
 
-        if (json.status !== "success") {
-          status.textContent = `❌ ${json.message}`;
-          return;
-        }
+      doc.setFontSize(16);
+      doc.text(`Attendance Report – ${date}`, 14, 20);
 
-        const data = json.data;
-        if (!data || data.length === 0) {
-          status.textContent = "⚠️ No attendance records found for this date.";
-          return;
-        }
+      doc.setFontSize(12);
+      let y = 30;
 
-        // ✅ Use correct jsPDF reference
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+      doc.text("Name | Attendance | Time | Location", 14, y);
+      y += 8;
 
-        doc.setFontSize(16);
-        doc.text(`Attendance Report – ${date}`, 14, 20);
-
-        doc.setFontSize(12);
-        let y = 30;
-
-        doc.text("Name | Attendance | Time | Location", 14, y);
+      for (const row of data) {
+        const line = `${row.name} | ${row.attendance || "-"} | ${row.time || "-"} | ${row.location || "-"}`;
+        doc.text(line, 14, y);
         y += 8;
 
-        for (const row of data) {
-          const line = `${row.name} | ${row.attendance || "-"} | ${row.time || "-"} | ${row.location || "-"}`;
-          doc.text(line, 14, y);
-          y += 8;
-
-          if (y > 270) {
-            doc.addPage();
-            y = 20;
-          }
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
         }
-
-        doc.save(`Attendance_${date}.pdf`);
-        status.textContent = "✅ PDF downloaded successfully.";
-      } catch (err) {
-        console.error(err);
-        status.textContent = "❌ Failed to generate PDF.";
       }
-    }
+
+      doc.save(`Attendance_${date}.pdf`);
+      status.textContent = "✅ PDF downloaded successfully.";
+    })
+    .withFailureHandler((error) => {
+      console.error(error);
+      status.textContent = "❌ Failed to generate PDF.";
+    })
+    .getAttendanceDataByDate({ parameter: { date } }); // Call your backend function
+}
+
   </script>
 </body>
 </html>
