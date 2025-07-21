@@ -312,18 +312,20 @@ button.btn-close {
     text-align: center;
   }
 
-    #status {
-  white-space: pre-line;
-  font-weight: 600;
-  min-height: 3em;
-  color: #6b0f00;
-  background-color: #fff8f5; /* Off-white background */
-  padding: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(107, 15, 0, 0.15);
-  margin-top: 1rem;
-  text-align: center;
-}
+  #status {
+    display: none; /* Hidden initially */
+    white-space: pre-line;
+    font-weight: 600;
+    min-height: 3em;
+    color: #6b0f00;
+    background-color: #fff8f5;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(107, 15, 0, 0.15);
+    margin-top: 1rem;
+    text-align: center;
+  }
+
 
 
   </style>
@@ -382,10 +384,22 @@ button.btn-close {
     const submitBtn = document.getElementById('submitBtn');
     const attendancePanel = document.getElementById('attendancePanel');
 
+    function showStatus(message) {
+      const statusDiv = document.getElementById('status');
+      if (message && message.trim() !== "") {
+        statusDiv.style.display = 'block';
+        statusDiv.textContent = message;
+      } else {
+        statusDiv.style.display = 'none';
+        statusDiv.textContent = '';
+      }
+    }
+
+
     function clearForm() {
       document.getElementById('firstNameInput').value = '';
       document.getElementById('lastNameInput').value = '';
-      status.innerText = '';
+      showStatus('');
       submitBtn.disabled = false;
     }
 
@@ -422,16 +436,16 @@ function hideOverlay() {
   const lastName = document.getElementById('lastNameInput').value.trim();
 
   if (!firstName || !lastName) {
-    status.innerText = 'Please enter both first and last name.';
+    showStatus('Please enter both first and last name.');
     return;
   }
 
   if (!navigator.geolocation) {
-    status.innerText = 'Geolocation not supported.';
+    showStatus('Geolocation not supported.');
     return;
   }
 
-  status.innerText = 'Getting location...';
+  showStatus('Getting location...');
   submitBtn.disabled = true;
 
  showOverlay(); 
@@ -440,7 +454,7 @@ function hideOverlay() {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
     
-    status.innerText = 'Submitting attendance...';
+    showStatus('Submitting your attendance...');
 
     try {
       const formData = new FormData();
@@ -493,25 +507,25 @@ function hideOverlay() {
         // }, 3000);
 
       } else if (data.status === 'already_marked') {
-        status.innerText += '\nYou have already marked attendance today.';
+       showStatus(status.innerText + '\nYou have already marked attendance today.');
         submitBtn.disabled = false;
       } else if (data.status === 'out_of_time') {
-        status.innerText = 'Attendance can only be marked between 6:30 PM and 9 PM IST.';
+        showStatus('Attendance can only be marked between 6:30 PM and 9 PM IST.');
         submitBtn.disabled = false;
       } else {
-        status.innerText = data.message || 'Error: Could not mark attendance.';
+        showStatus(data.message || 'Error: Could not mark attendance.');
         submitBtn.disabled = false;
       }
 
     } catch (error) {
       console.error(error);
-      status.innerText = 'Network or server error. Please try again.';
+     showStatus('Network or server error. Please try again.');
       submitBtn.disabled = false;
       hideOverlay();
     }
   }, error => {
     console.error(error);
-    status.innerText = 'Location access denied or unavailable.';
+    showStatus('Location access denied or unavailable.');
     submitBtn.disabled = false;
     hideOverlay();
   }, {
