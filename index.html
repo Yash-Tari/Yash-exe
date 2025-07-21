@@ -281,8 +281,49 @@ button.btn-close {
   margin-left: auto;
   margin-right: auto;
 }
+.loader {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #6b0f00;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
   </style>
 </head>
+
+  <div id="loadingOverlay" style="
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1.2rem;
+  color: #6b0f00;
+  font-weight: 600;
+  text-align: center;
+">
+  <div style="margin-bottom: 1rem;">
+    Submitting your attendance...
+  </div>
+  <div class="loader"></div>
+</div>
+
 <body>
   <div class="panel" id="attendancePanel">
     <img src="Taalchakra Logo_Maroon_2024.png" alt="Taalchakra Logo" class="logo" />
@@ -358,6 +399,13 @@ button.btn-close {
     function openInstagram() {
       window.open('https://www.instagram.com/taalchakra_dhol_tasha_pathak?igsh=NDMwczNqcmxpNWE=', '_blank');
     }
+function showOverlay() {
+  document.getElementById('loadingOverlay').style.display = 'block';
+}
+
+function hideOverlay() {
+  document.getElementById('loadingOverlay').style.display = 'none';
+}
 
   async function submitAttendance() {
   const firstName = document.getElementById('firstNameInput').value.trim();
@@ -375,6 +423,8 @@ button.btn-close {
 
   status.innerText = 'Getting location...';
   submitBtn.disabled = true;
+
+ showOverlay(); 
 
   navigator.geolocation.getCurrentPosition(async position => {
     const latitude = position.coords.latitude;
@@ -396,6 +446,8 @@ button.btn-close {
 
       const data = await response.json();
       console.log("Server response:", data);
+
+       hideOverlay();
 
       if (data.status === 'success') {
         status.innerText += data.locationMatch === '✅'
@@ -445,11 +497,13 @@ button.btn-close {
       console.error(error);
       status.innerText = 'Network or server error. Please try again.';
       submitBtn.disabled = false;
+      hideOverlay();
     }
   }, error => {
     console.error(error);
     status.innerText = 'Location access denied or unavailable.';
     submitBtn.disabled = false;
+    hideOverlay();
   }, {
     enableHighAccuracy: true,
     timeout: 15000,
