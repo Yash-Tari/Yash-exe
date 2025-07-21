@@ -8,7 +8,6 @@
       font-family: 'Segoe UI', sans-serif;
       background-color: #fefefe;
       color: #333;
-      margin: 0;
       padding: 2rem;
       text-align: center;
     }
@@ -33,55 +32,36 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      margin: 0.5rem;
     }
 
     button:hover {
       background-color: #b12c00;
     }
-
-    #status {
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-
-    a.back {
-      display: block;
-      margin-top: 2rem;
-      color: #cc3300;
-      text-decoration: underline;
-    }
   </style>
 </head>
 <body>
-  <h2>Export Attendance PDF 1</h2>
-
+  <h2>Export Attendance PDF</h2>
   <input type="date" id="exportDate" required />
   <br>
   <button onclick="downloadPDF()">Download PDF</button>
 
-  <p id="status"></p>
-
-  <a href="admin.html" class="back">⬅ Back to Admin Panel</a>
-
   <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec';
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec";
 
-    // Auto-fill today's date
     document.addEventListener("DOMContentLoaded", () => {
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('exportDate').value = today;
     });
 
     function downloadPDF() {
-      const date = document.getElementById('exportDate').value;
+      const date = document.getElementById("exportDate").value;
       if (!date) {
-        alert("Please select a date.");
+        alert("Please select a date");
         return;
       }
 
       const url = `${SCRIPT_URL}?mode=getPdfData&date=${date}`;
-      window.open(url, "_blank");
+      window.open(url, "_blank"); // open PDF in new tab
     }
   </script>
 </body>
