@@ -296,33 +296,29 @@ button.btn-close {
   100% { transform: rotate(360deg); }
 }
 
+  #loadingOverlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 1.2rem;
+    color: #6b0f00;
+    font-weight: 600;
+    text-align: center;
+  }
+
   </style>
 </head>
-
-  <div id="loadingOverlay" style="
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  font-family: 'Segoe UI', sans-serif;
-  font-size: 1.2rem;
-  color: #6b0f00;
-  font-weight: 600;
-  text-align: center;
-">
-  <div style="margin-bottom: 1rem;">
-    Submitting your attendance...
-  </div>
+<div id="loadingOverlay">
+  <div style="margin-bottom: 1rem;">Submitting your attendance...</div>
   <div class="loader"></div>
 </div>
+
 
 <body>
   <div class="panel" id="attendancePanel">
@@ -400,7 +396,7 @@ button.btn-close {
       window.open('https://www.instagram.com/taalchakra_dhol_tasha_pathak?igsh=NDMwczNqcmxpNWE=', '_blank');
     }
 function showOverlay() {
-  document.getElementById('loadingOverlay').style.display = 'block';
+  document.getElementById('loadingOverlay').style.display = 'flex';
 }
 
 function hideOverlay() {
