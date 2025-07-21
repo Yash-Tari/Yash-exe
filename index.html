@@ -325,6 +325,22 @@ button.btn-close {
     margin-top: 1rem;
     text-align: center;
   }
+      #suggestions {
+        border: 1px solid #ccc;
+        display: none;
+        position: absolute;
+        background: white;
+        max-height: 150px;
+        overflow-y: auto;
+        width: 100%;
+      }
+      #suggestions div {
+        padding: 5px;
+        cursor: pointer;
+      }
+      #suggestions div:hover {
+        background-color: #f0f0f0;
+      }
 
 
 
@@ -341,8 +357,8 @@ button.btn-close {
     <img src="Taalchakra Logo_Maroon_2024.png" alt="Taalchakra Logo" class="logo" />
     <h2>Taalchakra Attendance</h2>
     <p class="instructions">Please enter your first and last name</p>
-    <input type="text" id="firstNameInput" placeholder="First name" autocomplete="given-name" />
-    <input type="text" id="lastNameInput" placeholder="Last name" autocomplete="family-name" />
+    <input type="text" id="firstNameInput" onkeyup="showSuggestions()" placeholder="First name" autocomplete="off" />
+    <input type="text" id="lastNameInput" onkeyup="showSuggestions()" placeholder="Last name" autocomplete="off" />
     <div class="buttons">
       <button class="btn-submit" id="submitBtn" onclick="submitAttendance()">Submit</button>
       <div class="secondary-buttons">
@@ -560,5 +576,36 @@ function closeConfirmation() {
 }
 
   </script>
+
+   <script>
+      let nameList = [];
+
+      google.script.run.withSuccessHandler(function(data) {
+        nameList = data;
+      }).getNames();
+
+      function showSuggestions() {
+        const input = document.getElementById("nameInput").value.toLowerCase();
+        const suggestionsDiv = document.getElementById("suggestions");
+        suggestionsDiv.innerHTML = "";
+        suggestionsDiv.style.display = "none";
+
+        if (!input) return;
+
+        const matches = nameList.filter(name => name.toLowerCase().includes(input));
+        if (matches.length > 0) {
+          suggestionsDiv.style.display = "block";
+          matches.forEach(name => {
+            const div = document.createElement("div");
+            div.textContent = name;
+            div.onclick = () => {
+              document.getElementById("nameInput").value = name;
+              suggestionsDiv.style.display = "none";
+            };
+            suggestionsDiv.appendChild(div);
+          });
+        }
+      }
+    </script>
 </body>
 </html>
