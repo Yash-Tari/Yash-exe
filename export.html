@@ -67,11 +67,11 @@
   <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec';
 
-    // Auto-fill today's date on load
-    window.onload = () => {
+    // ✅ Auto-fill today's date when DOM is ready
+    document.addEventListener("DOMContentLoaded", () => {
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('exportDate').value = today;
-    };
+    });
 
     async function downloadPDF() {
       const date = document.getElementById('exportDate').value;
@@ -95,3 +95,41 @@
 
         const data = json.data;
         if (!data || data.length === 0) {
+          status.textContent = "⚠️ No attendance records found for this date.";
+          return;
+        }
+
+        // ✅ Use correct jsPDF reference
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFontSize(16);
+        doc.text(`Attendance Report – ${date}`, 14, 20);
+
+        doc.setFontSize(12);
+        let y = 30;
+
+        doc.text("Name | Attendance | Time | Location", 14, y);
+        y += 8;
+
+        for (const row of data) {
+          const line = `${row.name} | ${row.attendance || "-"} | ${row.time || "-"} | ${row.location || "-"}`;
+          doc.text(line, 14, y);
+          y += 8;
+
+          if (y > 270) {
+            doc.addPage();
+            y = 20;
+          }
+        }
+
+        doc.save(`Attendance_${date}.pdf`);
+        status.textContent = "✅ PDF downloaded successfully.";
+      } catch (err) {
+        console.error(err);
+        status.textContent = "❌ Failed to generate PDF.";
+      }
+    }
+  </script>
+</body>
+</html>
