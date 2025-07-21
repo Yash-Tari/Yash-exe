@@ -83,27 +83,27 @@
       window.open(url, "_blank"); // Opens PDF in a new tab
     }
 
-    function downloadExcel() {
-      const date = document.getElementById("exportDate").value;
-      if (!date) return alert("Please select a date.");
-      const url = `${SCRIPT_URL}?mode=exportExcelData&date=${date}`;
-      
-      // Fetch the link and redirect to it
-      fetch(url)
-        .then(res => res.text())
-        .then(link => {
-          if (link.startsWith("http")) {
-            window.open(link, "_blank"); // Opens downloadable Excel
-            document.getElementById("message").innerText = "✅ Excel file is ready for download.";
-          } else {
-            document.getElementById("message").innerText = `❌ ${link}`;
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          document.getElementById("message").innerText = "❌ Failed to export Excel. Try again.";
-        });
-    }
+function downloadExcel() {
+  const date = document.getElementById("exportDate").value;
+  if (!date) return alert("Please select a date.");
+
+  const url = `${SCRIPT_URL}?mode=exportExcelData&date=${date}`;
+  
+  fetch(url)
+    .then(res => res.text())
+    .then(link => {
+      if (link.startsWith("http")) {
+        window.open(link, "_blank");  // ✅ OPEN THE FILE LINK DIRECTLY
+        document.getElementById("message").innerText = "✅ Excel is being downloaded.";
+      } else {
+        document.getElementById("message").innerText = `❌ ${link}`;
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById("message").innerText = "❌ Failed to export Excel.";
+    });
+}
   </script>
 </body>
 </html>
