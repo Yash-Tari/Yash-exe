@@ -527,7 +527,7 @@ function hideOverlay() {
        showStatus(status.innerText + '\nYou have already marked attendance today.');
         submitBtn.disabled = false;
       } else if (data.status === 'out_of_time') {
-        showStatus('Attendance can only be marked between 6:30 PM and 9 PM IST.');
+        showStatus('Attendance can only be marked between 6:30 PM and 8:30 PM.');
         submitBtn.disabled = false;
       } else {
         showStatus(data.message || 'Error: Could not mark attendance.');
