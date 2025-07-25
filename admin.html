@@ -186,10 +186,25 @@
       document.getElementById('loginStatus').innerText = "Incorrect password.";
     }
   }
-    function togglePassword() {
-      const input = document.getElementById('adminPassword');
-      input.type = input.type === 'password' ? 'text' : 'password';
-    }
+function togglePassword() {
+  const input = document.getElementById('adminPassword');
+  const icon = document.getElementById('eyeIcon');
+  
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.innerHTML = `
+      <path d="M17.94 17.94A10.88 10.88 0 0 1 12 20c-7 0-11-8-11-8a21.91 21.91 0 0 1 5.06-6.06"/>
+      <path d="M1 1l22 22"/>
+    `;
+  } else {
+    input.type = 'password';
+    icon.innerHTML = `
+      <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+      <circle cx="12" cy="12" r="3"/>
+    `;
+  }
+}
+
 
 
 
