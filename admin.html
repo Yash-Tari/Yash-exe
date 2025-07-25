@@ -129,7 +129,17 @@
 
 </head>
 <body>
-  <div class="panel" id="adminPanel">
+
+<div id="loginPanel" style="text-align:center; background:#fff; color:#333; padding:2rem; border-radius:12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); max-width:400px; margin:auto; margin-top:10vh;">
+  <h2 style="color:#cc3300;">Admin Login</h2>
+  <input type="password" id="adminPassword" placeholder="Enter Password" style="padding:0.6rem; font-size:1rem; width:80%; border-radius:8px; border:1px solid #ccc;" />
+  <br><br>
+  <button onclick="validateLogin()" style="background:#cc3300; color:#fff; padding:0.6rem 1.5rem; border:none; border-radius:8px; cursor:pointer;">Login</button>
+  <p id="loginStatus" style="color:red; margin-top:1rem;"></p>
+</div>
+
+  
+  <div class="panel hidden" id="adminPanel">
     <img src="Taalchakra Logo_Maroon_2024.png" alt="Taalchakra Logo" class="logo">
     <h2>Admin Panel – Set Attendance Location</h2>
     <p>Enter or auto-detect latitude and longitude:</p>
@@ -152,6 +162,19 @@
   <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzek8wbWkUh_Mi5ASm42h5zZS84oPJsZFcGl_G0b64a-pbkv8CNO0gDnBSUqz4ezBfJAA/exec';
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1qjJ7XCxvoWLQRPocrD8C_p_10EZwthVVD813nEiE_4w/edit?usp=sharing'; // Replace with actual sheet URL
+
+  const ADMIN_PASSWORD = "DholTasha@2017"; // Change this
+  
+  function validateLogin() {
+    const entered = document.getElementById('adminPassword').value;
+    if (entered === ADMIN_PASSWORD) {
+      document.getElementById('loginPanel').style.display = 'none';
+      document.getElementById('adminPanel').classList.remove('hidden');
+    } else {
+      document.getElementById('loginStatus').innerText = "Incorrect password.";
+    }
+  }
+
 
     window.onload = () => {
       fetch(SCRIPT_URL)
